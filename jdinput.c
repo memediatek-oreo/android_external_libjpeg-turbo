@@ -246,9 +246,11 @@ latch_quant_tables (j_decompress_ptr cinfo)
   int ci, qtblno;
   jpeg_component_info *compptr;
   JQUANT_TBL *qtbl;
-
-  for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
-    compptr = cinfo->cur_comp_info[ci];
+//Google issue, if comps_in_scan < num_components, miss latch
+//  for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+//    compptr = cinfo->cur_comp_info[ci];
+  for (ci = 0; ci < cinfo->num_components; ci++) {
+    compptr = &(cinfo->comp_info[ci]);
     /* No work if we already saved Q-table for this component */
     if (compptr->quant_table != NULL)
       continue;

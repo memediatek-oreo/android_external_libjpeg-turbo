@@ -284,8 +284,17 @@ get_sof (j_decompress_ptr cinfo, boolean is_prog, boolean is_arith)
     compptr->component_index = ci;
     INPUT_BYTE(cinfo, compptr->component_id, return FALSE);
     INPUT_BYTE(cinfo, c, return FALSE);
-    compptr->h_samp_factor = (c >> 4) & 15;
-    compptr->v_samp_factor = (c     ) & 15;
+    //Google issue: grayscale
+    if(cinfo->num_components == 1)
+    {
+        compptr->h_samp_factor = 1;
+        compptr->v_samp_factor = 1;
+    }
+    else
+    {
+        compptr->h_samp_factor = (c >> 4) & 15;
+        compptr->v_samp_factor = (c     ) & 15;
+    }
     INPUT_BYTE(cinfo, compptr->quant_tbl_no, return FALSE);
 
     TRACEMS4(cinfo, 1, JTRC_SOF_COMPONENT,
